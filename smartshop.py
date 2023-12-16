@@ -94,8 +94,8 @@ if __name__ == "__main__":
     )
 
     # Start Kafka producer
+    kafka = KafkaAVRO(config["confluent"])
     if not args.dry_run:
-        kafka = KafkaAVRO(config["confluent"])
         logging.info("Started Kafka producer client")
 
     # Start generating SmartShop events
@@ -115,7 +115,7 @@ if __name__ == "__main__":
                     max_shops=MAX_SHOPS,
                 )
                 sessions_to_remove.append(session_id)
-                logging.debug(f"CHECK_OUT: {payload_status}")
+                logging.debug(f"{kafka.checkout_topic}: {payload_status}")
                 if not args.dry_run:
                     # Produce message to Kafka
                     kafka.produce_message(
@@ -153,7 +153,7 @@ if __name__ == "__main__":
                             max_skus=MAX_SKUS,
                             max_shops=MAX_SHOPS,
                         )
-                        logging.debug(f"BASKET: {payload_basket}")
+                        logging.debug(f"{kafka.basket_topic}: {payload_basket}")
                         if not args.dry_run:
                             # Produce message to Kafka
                             kafka.produce_message(
@@ -183,7 +183,7 @@ if __name__ == "__main__":
                                 max_skus=MAX_SKUS,
                                 max_shops=MAX_SHOPS,
                             )
-                            logging.debug(f"BASKET: {payload_basket}")
+                            logging.debug(f"{kafka.basket_topic}: {payload_basket}")
                             if not args.dry_run:
                                 # Produce message to Kafka
                                 kafka.produce_message(
@@ -230,7 +230,7 @@ if __name__ == "__main__":
                 "client_id": client_id,
                 "sku": dict(),
             }
-            logging.debug(f"CHECK_IN: {payload_status}")
+            logging.debug(f"{kafka.checkin_topic}: {payload_status}")
             if not args.dry_run:
                 # Produce message to Kafka
                 kafka.produce_message(
