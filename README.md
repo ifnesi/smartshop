@@ -45,6 +45,11 @@ Example of data produced:
 2023-12-16 21:53:57.609 [DEBUG]: BASKET: {'ts': 1702763637609, 'session_id': '646660cc080b4e32a0b391914c885702', 'sku': 'SKU_61', 'qty': 2, 'unit_price': 78.01}
 2023-12-16 21:54:05.628 [DEBUG]: BASKET: {'ts': 1702763645628, 'session_id': '646660cc080b4e32a0b391914c885702', 'sku': 'SKU_49', 'qty': 3, 'unit_price': 4.01}
 2023-12-16 21:54:11.651 [DEBUG]: CHECK_OUT: {'ts': 1702763651651, 'session_id': '646660cc080b4e32a0b391914c885702', 'client_id': 'User_11', 'status': -1, 'shop_id': 'SHOP_47'}
+^C2023-12-16 21:54:11.651 [INFO]: Signal received, checking all current sessions out
+2023-12-16 21:54:11.652 [INFO]: Checkout completed
+2023-12-16 21:54:11.652 [INFO]: Waiting for the Kafka producer client to flush all pending messages
+2023-12-16 21:54:11.653 [INFO]: Flushing Kafka producer
+2023-12-16 21:54:11.653 [INFO]: Kafka producer completed, bye bye
 ```
 
 Access ksqlDB on Confluent Cloud and create the following SQL statements:
