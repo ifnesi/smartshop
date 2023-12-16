@@ -54,6 +54,7 @@ Example of data produced:
 
 Access ksqlDB on Confluent Cloud and create the following SQL statements:
 ```
+---------------------------------
 CREATE TABLE `smartshop-checkout` (
   session_id STRING PRIMARY KEY,
   shop_id STRING,
@@ -65,6 +66,7 @@ CREATE TABLE `smartshop-checkout` (
   'value_format' = 'AVRO'
 );
 
+--------------------------------
 CREATE STREAM `smartshop-basket` (
   session_id STRING KEY,
   sku STRING,
@@ -78,6 +80,7 @@ WITH (
   'value_format' = 'AVRO'
 );
 
+------------------------------------------
 CREATE TABLE `smartshop-basket-aggregated`
 WITH (
   'kafka_topic' = 'smartshop-basket-aggregated',
@@ -93,6 +96,7 @@ FROM `smartshop-basket`
 GROUP BY session_id
 EMIT CHANGES;
 
+---------------------------------------
 CREATE TABLE `smartshop-checkout-qty-4`
 WITH (
   'kafka_topic' = 'smartshop-checkout-qty-4',
