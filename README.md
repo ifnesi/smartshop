@@ -147,7 +147,7 @@ WHERE
 EMIT CHANGES;
 ```
 
-See the results streammed to the Kafka topic `smartshop-checkout-qty`.
+See the results streamed to the Kafka topic `smartshop-checkout-qty`.
 
 Result Table (upon check-out):
 ```
