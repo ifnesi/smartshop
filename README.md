@@ -126,9 +126,9 @@ GROUP BY session_id
 EMIT CHANGES;
 
 ---------------------------------------
-CREATE TABLE `smartshop-checkout-qty-4`
+CREATE TABLE `smartshop-checkout-qty`
 WITH (
-  'kafka_topic' = 'smartshop-checkout-qty-4',
+  'kafka_topic' = 'smartshop-checkout-qty',
   'key_format' = 'KAFKA',
   'value_format' = 'AVRO',
   'timestamp' = 'ts'
