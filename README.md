@@ -147,7 +147,7 @@ WHERE
 EMIT CHANGES;
 ```
 
-Result Table:
+Result Table (upon check-out):
 ```
 +----------------------------------+---------+-----------+---------------+---------+-------------+
 | session_id                       | shop_id | client_id | ts            | sum_qty | total_price |
