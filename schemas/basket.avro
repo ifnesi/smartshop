@@ -1,0 +1,39 @@
+{
+  "namespace": "smartshop",
+  "name": "basket",
+  "type": "record",
+  "fields":
+    [
+        {
+            "name": "session_id",
+            "type": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "sku",
+            "type": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "qty",
+            "type": {
+                "type": "int"
+            }
+        },
+        {
+            "name": "unit_price",
+            "type": {
+                "type": "double"
+            }
+        },
+        {
+            "name": "ts",
+            "type": {
+                "type": "long",
+                "logicalType": "timestamp-millis"
+            }
+        }
+    ]
+}

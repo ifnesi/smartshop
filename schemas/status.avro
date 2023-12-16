@@ -1,0 +1,39 @@
+{
+  "namespace": "smartshop",
+  "name": "status",
+  "type": "record",
+  "fields":
+    [
+        {
+            "name": "session_id",
+            "type": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "shop_id",
+            "type": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "client_id",
+            "type": {
+                "type": "string"
+            }
+        },
+        {
+            "name": "status",
+            "type": {
+                "type": "int"
+            }
+        },
+        {
+            "name": "ts",
+            "type": {
+                "type": "long",
+                "logicalType": "timestamp-millis"
+            }
+        }
+    ]
+}

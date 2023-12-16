@@ -1,0 +1,4 @@
+confluent-kafka==2.3.0
+fastavro==1.9.1
+pyaml==23.9.7
+requests==2.31.0

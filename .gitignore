@@ -1,0 +1,10 @@
+.venv
+.vscode/
+.DS_Store
+*.pyc
+*.log
+__pycache__/
+config/*
+!config/example.yaml
+!config/localhost.yaml
+notes.txt

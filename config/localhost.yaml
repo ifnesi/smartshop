@@ -1,0 +1,32 @@
+smartshop:
+  max_skus: 100
+  max_shops: 100
+  max_clients: 100
+  max_simultaneous_sessions: 1
+  max_transacions_per_second: 1
+  add_sku_range_min: 1
+  add_sku_range_max: 3
+  update_basket_range_min: 5
+  update_basket_range_max: 10
+  update_basket_remove_sku_probability: 0.15
+  max_basket_size: 10
+  checkout_range_min: 30
+  checkout_range_max: 60
+
+confluent:
+  data:
+    checkin:
+      topic: smartshop-checkin
+      schema: schemas/status.avro
+    basket:
+      topic: smartshop-basket
+      schema: schemas/basket.avro
+    checkout:
+      topic: smartshop-checkout
+      schema: schemas/status.avro
+
+  kafka-cluster:
+    bootstrap.servers: localhost:9092
+
+  schema-registry:
+    url: http://localhost:8081
