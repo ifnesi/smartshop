@@ -4,6 +4,7 @@ Aggregate data from a smartshop using ksqlDB and Flink on Confluent Cloud.
 
 # Pre-requisites
 - User account on [Confluent Cloud](https://www.confluent.io/confluent-cloud/tryfree)
+- Docker
 - Python +3.8
 
 # Installation (only need to do that once)
@@ -19,6 +20,20 @@ Start Producer (For configuration files, follow example on `config/example.yaml`
 ```
 source .venv/bin/activate
 python3 smartshop.py --config config/{your_config_file_here}.yaml --verbose
+```
+
+You can also try using Confluent Platform + ksqlDB on Docker (Flink pending):
+
+Start Docker Compose:
+```
+docker build -t flink-sandbox . -f Dockerfile_flink
+docker-compose up --force-recreate --always-recreate-deps -V --scale taskmanager=5 -d
+```
+
+Wait for pods to be up and running:
+```
+source .venv/bin/activate
+python3 smartshop.py --config config/localhost.yaml --verbose
 ```
 
 Example of data produced:
