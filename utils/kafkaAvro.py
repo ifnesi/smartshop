@@ -11,6 +11,7 @@ class KafkaAVRO:
     def __init__(
         self,
         confluent_config: dict,
+        dry_run: bool = False,
         log_handler: logging.Logger = logging.getLogger(),
     ) -> None:
         self.kafka_config = confluent_config["kafka-cluster"]
@@ -32,8 +33,10 @@ class KafkaAVRO:
         ).read()
         self.log_handler = log_handler
         self._next_producer_poll = 0
-        self._set_schema_registry()
-        self._set_kafka_producer()
+        # Instantiate Kafka Producer and Schema Registry Clients
+        if not dry_run:
+            self._set_schema_registry()
+            self._set_kafka_producer()
 
     def _error_cb(
         self,
