@@ -50,6 +50,7 @@ def gen_shop_id(
 def gen_payload_status(
     session_id: str = None,
     client_id: str = None,
+    shop_id: str = None,
     status: int = None,
     max_clients: int = 1,
     max_shops: int = 1,
@@ -60,22 +61,24 @@ def gen_payload_status(
         "session_id": session_id_value,
     }
     if isinstance(status, int):
+        payload["status"] = status
         payload["client_id"] = (
-            gen_client_id(
-                session_id_value,
-                max_clients=max_clients,
-            )
+            gen_client_id(session_id_value, max_clients=max_clients)
             if client_id is None
             else client_id
         )
-        payload["status"] = status
-        payload["shop_id"] = gen_shop_id(session_id_value, max_shops=max_shops)
+        payload["shop_id"] = (
+            gen_shop_id(session_id_value, max_shops=max_shops)
+            if shop_id is None
+            else shop_id
+        )
     return payload
 
 
 def gen_payload_basket(
     session_id: str = None,
     client_id: str = None,
+    shop_id: str = None,
     sku: str = None,
     qty: int = 1,
     max_clients: int = 1,
@@ -85,6 +88,7 @@ def gen_payload_basket(
     payload = gen_payload_status(
         session_id=session_id,
         client_id=client_id,
+        shop_id=shop_id,
         max_clients=max_clients,
         max_shops=max_shops,
     )

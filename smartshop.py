@@ -24,7 +24,7 @@ def signal_handler(sig, frame):
 
 if __name__ == "__main__":
     # Save in memory state of the SmartShop sessions
-    #  - Format: {"<session_id>": {"session_end": <timestamp>, "next_update": <timestamp>, "client_id": "<client_id>", "sku": {"<sku>": sum_qty}}}
+    #  - Format: {"<session_id>": {"session_end": <timestamp>, "next_update": <timestamp>, "shop_id": "<shop_id>", "client_id": "<client_id>", "sku": {"<sku>": sum_qty}}}
     state_smartshop_session = dict()
 
     # Set signal handlers
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--dry-run",
         dest="dry_run",
-        help="Generate data, but do not produce to Kafka",
+        help="Generate data, but do not produce to Kafka (it will set logs to be verbose)",
         action="store_true",
     )
     args = parser.parse_args()
@@ -56,7 +56,7 @@ if __name__ == "__main__":
     # Logging handler
     logging.basicConfig(
         format="%(asctime)s.%(msecs)03d [%(levelname)s]: %(message)s",
-        level=logging.DEBUG if args.verbose else logging.INFO,
+        level=logging.DEBUG if (args.verbose or args.dry_run) else logging.INFO,
         datefmt="%Y-%m-%d %H:%M:%S",
     )
 
@@ -65,6 +65,8 @@ if __name__ == "__main__":
         config = yaml.safe_load(f)
 
     # Get SmartShop config
+    CHECKIN_STATUS_VALUE = config["smartshop"]["checkin_status_value"]
+    CHECKOUT_STATUS_VALUE = config["smartshop"]["checkout_status_value"]
     MAX_SKUS = config["smartshop"]["max_skus"]
     MAX_SHOPS = config["smartshop"]["max_shops"]
     MAX_CLIENTS = config["smartshop"]["max_clients"]
@@ -110,12 +112,11 @@ if __name__ == "__main__":
                 payload_status = utils.gen_payload_status(
                     session_id=session_id,
                     client_id=value["client_id"],
-                    status=-1,
-                    max_clients=MAX_CLIENTS,
-                    max_shops=MAX_SHOPS,
+                    shop_id=value["shop_id"],
+                    status=CHECKOUT_STATUS_VALUE,
                 )
                 sessions_to_remove.append(session_id)
-                logging.debug(f"{kafka.checkout_topic}: {payload_status}")
+                logging.debug(f"[{kafka.checkout_topic}] {payload_status}")
                 if not args.dry_run:
                     # Produce message to Kafka
                     kafka.produce_message(
@@ -146,14 +147,11 @@ if __name__ == "__main__":
                         state_smartshop_session[session_id]["sku"][sku] = qty
                         payload_basket = utils.gen_payload_basket(
                             session_id=session_id,
-                            client_id=value["client_id"],
                             sku=sku,
                             qty=qty,
-                            max_clients=MAX_CLIENTS,
                             max_skus=MAX_SKUS,
-                            max_shops=MAX_SHOPS,
                         )
-                        logging.debug(f"{kafka.basket_topic}: {payload_basket}")
+                        logging.debug(f"[{kafka.basket_topic}] {payload_basket}")
                         if not args.dry_run:
                             # Produce message to Kafka
                             kafka.produce_message(
@@ -176,14 +174,11 @@ if __name__ == "__main__":
                             )
                             payload_basket = utils.gen_payload_basket(
                                 session_id=session_id,
-                                client_id=value["client_id"],
                                 sku=sku,
                                 qty=-1 * qty_to_remove,
-                                max_clients=MAX_CLIENTS,
                                 max_skus=MAX_SKUS,
-                                max_shops=MAX_SHOPS,
                             )
-                            logging.debug(f"{kafka.basket_topic}: {payload_basket}")
+                            logging.debug(f"[{kafka.basket_topic}] {payload_basket}")
                             if not args.dry_run:
                                 # Produce message to Kafka
                                 kafka.produce_message(
@@ -200,26 +195,21 @@ if __name__ == "__main__":
         # Break data generation loop
         if SIGNAL_SET:
             logging.info("Checkout completed")
-            if not args.dry_run:
-                logging.info(
-                    "Waiting for the Kafka producer client to flush all pending messages"
-                )
             break
 
         # Create new SmartShop session if needed
         if len(state_smartshop_session.keys()) < MAX_SIMULTANEOUS_SESSIONS:
             # Generate SmartShop session and pick a random client
             session_id = utils.gen_session_id()
-            client_id = utils.gen_client_id(
-                session_id,
-                max_clients=MAX_CLIENTS,
-            )
+            client_id = utils.gen_client_id(session_id, max_clients=MAX_CLIENTS)
+            shop_id = utils.gen_shop_id(session_id, max_shops=MAX_SHOPS)
 
             # Generate checkin payload
             payload_status = utils.gen_payload_status(
                 session_id=session_id,
                 client_id=client_id,
-                status=1,  # check-in
+                shop_id=shop_id,
+                status=CHECKIN_STATUS_VALUE,
                 max_clients=MAX_CLIENTS,
                 max_shops=MAX_SHOPS,
             )
@@ -228,9 +218,10 @@ if __name__ == "__main__":
                 "session_end": time.time() + random.randint(*CHECKOUT_TIME_RANGE),
                 "next_update": time.time() + random.randint(*UPDATE_BASKET_RANGE),
                 "client_id": client_id,
+                "shop_id": shop_id,
                 "sku": dict(),
             }
-            logging.debug(f"{kafka.checkin_topic}: {payload_status}")
+            logging.debug(f"[{kafka.checkin_topic}] {payload_status}")
             if not args.dry_run:
                 # Produce message to Kafka
                 kafka.produce_message(
