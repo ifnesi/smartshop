@@ -10,7 +10,7 @@ if [ "$1" = "jobmanager" ]; then
  	partitions=1
  	for topic in "smartshop-checkin" "smartshop-checkout" "smartshop-basket"
  	do
-		partitions=$((partitions+1))
+		#partitions=$((partitions+1))
 		echo "Pre-creating topic $topic"
 		$KAFKA_BIN_DIR/kafka-topics.sh --bootstrap-server=$KAFKA_BOOTSTRAP_SERVER --create --topic=$topic --partitions=$partitions --replication-factor=1
  	done
