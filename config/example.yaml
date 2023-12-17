@@ -1,17 +1,28 @@
 smartshop:
+  # Max number of SKUs
   max_skus: 100
+  # Max number of Shops
   max_shops: 100
+  # Max number of Clients (the same client can be in multiple sessions simultaneously)
   max_clients: 100
+  # Max number of simultaneous sessions
   max_simultaneous_sessions: 1
+  # Max number of transactions per second
   max_transacions_per_second: 1
+  # Min and Max range of items to be added to the basket at once (selected randomly between - inclusive)
   add_sku_range_min: 1
   add_sku_range_max: 3
+  # Min and Max range of waiting time to update a given basket (selected randomly between - inclusive), in seconds
   update_basket_range_min: 5
   update_basket_range_max: 10
+  # Probability to have an item remove from the basket other than added
   update_basket_remove_sku_probability: 0.15
-  max_basket_size: 10
+  # Max number of items in a seingle basket
+  max_basket_size: 100
+  # Min and Max range of the duration of one session (selected randomly between - inclusive), in seconds
   checkout_range_min: 30
   checkout_range_max: 60
+  # Check-in and Check-out hae the same AVRO schema, what will differentiate them is the 'status' value
   checkin_status_value: 1
   checkout_status_value: -1
 
