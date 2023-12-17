@@ -12,6 +12,8 @@ smartshop:
   max_basket_size: 10
   checkout_range_min: 30
   checkout_range_max: 60
+  checkin_status_value: 1
+  checkout_status_value: -1
 
 confluent:
   data:
