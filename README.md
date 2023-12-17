@@ -1,6 +1,8 @@
+![image](docs/confluent-logo-300-2.png)
+
 # Overview
 
-Aggregate data from a smartshop using ksqlDB and Flink on Confluent Cloud.
+Aggregate data check-in/out and basket update events from a smartshop using ksqlDB and Flink on Confluent Cloud.
 
 # Pre-requisites
 - User account on [Confluent Cloud](https://www.confluent.io/confluent-cloud/tryfree)
@@ -154,3 +156,16 @@ Result Table (upon check-out):
 | 646660cc080b4e32a0b391914c885702 | SHOP_47 | User_11   | 1702763651651 |       9 |      532.25 |
 +----------------------------------+---------+-----------+---------------+---------+-------------+
 ```
+
+# External References
+Get started with Confluent, for free: https://www.confluent.io/en-gb/get-started/
+ - Confluent makes it easy to connect your apps, systems, and entire organization with real-time data flows and processing
+ - We provide a solution for data in motion that is cloud native, complete, and available everywhere you need it.
+
+ksqlDB Documentation: https://docs.ksqldb.io/en/latest/
+
+Apache Flink 101: https://developer.confluent.io/courses/apache-flink/intro/
+
+Check out [Confluent's Developer portal](https://developer.confluent.io), it has free courses, documents, articles, blogs, podcasts and so many more content to get you up and running with a fully managed Apache Kafka service.
+
+Disclaimer: I work for Confluent :wink:
