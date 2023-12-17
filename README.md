@@ -82,18 +82,6 @@ Example of data produced:
 
 Access ksqlDB on Confluent Cloud and create the following SQL statements:
 ```
----------------------------------
-CREATE TABLE `smartshop-checkout` (
-  session_id STRING PRIMARY KEY,
-  shop_id STRING,
-  client_id STRING,
-  ts BIGINT
-) WITH (
-  'kafka_topic' = 'smartshop-checkout',
-  'key_format' = 'KAFKA',
-  'value_format' = 'AVRO'
-);
-
 --------------------------------
 CREATE STREAM `smartshop-basket` (
   session_id STRING KEY,
@@ -117,32 +105,40 @@ WITH (
 ) AS
 SELECT
   session_id,
-  MAX(FROM_UNIXTIME(ts)) AS ts,
-  SUM(qty) AS SUM_QTY,
-  SUM(qty * unit_price) AS TOTAL_PRICE
+  SUM(qty) AS sum_qty,
+  SUM(qty * unit_price) AS total_price
 FROM `smartshop-basket`
 GROUP BY session_id
 EMIT CHANGES;
+
+---------------------------------
+CREATE TABLE `smartshop-checkout` (
+  session_id STRING PRIMARY KEY,
+  shop_id STRING,
+  client_id STRING,
+  ts BIGINT
+) WITH (
+  'kafka_topic' = 'smartshop-checkout',
+  'key_format' = 'KAFKA',
+  'value_format' = 'AVRO'
+);
 
 ---------------------------------------
 CREATE TABLE `smartshop-checkout-qty`
 WITH (
   'kafka_topic' = 'smartshop-checkout-qty',
   'key_format' = 'KAFKA',
-  'value_format' = 'AVRO',
-  'timestamp' = 'ts'
+  'value_format' = 'AVRO'
 ) AS
 SELECT
-  s.session_id,
+  s.session_id AS session_id,
   s.shop_id,
   s.client_id,
   FROM_UNIXTIME(s.ts) AS ts,
-  b.sum_qty,
-  b.total_price
+  COALESCE(b.sum_qty, 0) AS sum_qty,
+  CAST(b.total_price AS DECIMAL(16, 2)) AS total_price
 FROM `smartshop-checkout` s
 LEFT JOIN `smartshop-basket-aggregated` b ON s.session_id=b.session_id
-WHERE
-  b.sum_qty IS NOT NULL
 EMIT CHANGES;
 ```
 
