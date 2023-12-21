@@ -29,13 +29,13 @@ smartshop:
 confluent:
   data:
     checkin:
-      topic: smartshop-checkin
+      topic: smartshop-session
       schema: schemas/status.avro
     basket:
       topic: smartshop-basket
       schema: schemas/basket.avro
     checkout:
-      topic: smartshop-checkout
+      topic: smartshop-session
       schema: schemas/status.avro
 
   kafka-cluster:

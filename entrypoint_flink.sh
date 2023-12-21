@@ -8,7 +8,7 @@ KAFKA_BIN_DIR=/opt/kafka/bin
 # We only want to pre-create topics once, so do it during job manager startup
 if [ "$1" = "jobmanager" ]; then
  	partitions=1
- 	for topic in "smartshop-checkin" "smartshop-checkout" "smartshop-basket"
+ 	for topic in "smartshop-session" "smartshop-basket"
  	do
 		#partitions=$((partitions+1))
 		echo "Pre-creating topic $topic"
