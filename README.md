@@ -33,6 +33,9 @@ options:
 
 ## Start Demo
 Start Producer (For configuration files, follow example on `config/example.yaml`):
+
+IMPORTANT: If not using docker, make sure to the create the topics before start producing to them.
+
 ```
 source .venv/bin/activate
 python3 smartshop.py --config config/{your_config_file_here}.yaml --verbose
